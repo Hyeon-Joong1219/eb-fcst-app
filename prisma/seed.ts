@@ -145,12 +145,9 @@ const products = [
 // 3. USERS
 // ─────────────────────────────────────────────────────────────────────────────
 const usersData = [
-  { email: 'admin@merck.com',    name: '시스템관리자',  name_en: 'System Admin',    role: 'ADMIN'   as const, password: 'Admin1234!' },
-  { email: 'manager@merck.com',  name: '팀장',          name_en: 'Team Manager',    role: 'MANAGER' as const, password: 'Manager1234!' },
-  { email: 'am1@merck.com',      name: '김민준',        name_en: 'Minjun Kim',      role: 'AM'      as const, password: 'Am1234!' },
-  { email: 'am2@merck.com',      name: '이서연',        name_en: 'Seoyeon Lee',     role: 'AM'      as const, password: 'Am1234!' },
-  { email: 'am3@merck.com',      name: '박지우',        name_en: 'Jiwoo Park',      role: 'AM'      as const, password: 'Am1234!' },
-  { email: 'am4@merck.com',      name: '최유진',        name_en: 'Yujin Choi',      role: 'AM'      as const, password: 'Am1234!' },
+  { email: 'admin',        name: '관리자', name_en: 'Admin',  role: 'ADMIN'  as const, password: 'admin1234'   },
+  { email: 'merck_editor', name: '편집자', name_en: 'Editor', role: 'EDITOR' as const, password: 'editor2026@' },
+  { email: 'merck_viewer', name: '조회자', name_en: 'Viewer', role: 'VIEWER' as const, password: 'viewer2026@' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -278,8 +275,8 @@ async function main() {
     });
     userRecords.push({ id: user.id });
   }
-  // AM users start at index 2
-  const amUsers = userRecords.slice(2);
+  // admin 유저를 모든 고객의 owner로 사용
+  const amUsers = userRecords;
   console.log(`     ✓ ${usersData.length}명 User 등록`);
 
   // ── 4. Customers ──────────────────────────────────────────────────────────
