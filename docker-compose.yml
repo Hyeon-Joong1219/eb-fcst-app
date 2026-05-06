@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eb_fcst_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ebfcst
+      POSTGRES_PASSWORD: EbFcst2025!
+      POSTGRES_DB: eb_fcst
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ebfcst -d eb_fcst']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # (선택) Adminer — 웹 기반 DB 뷰어 http://localhost:8080
+  adminer:
+    image: adminer:4
+    container_name: eb_fcst_adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

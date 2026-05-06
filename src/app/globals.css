@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --merck-blue: 199 100% 44%;
+    --merck-dark: 214 100% 20%;
+  }
+
+  body {
+    @apply bg-white text-slate-900 antialiased;
+    font-family: 'Pretendard', 'Inter', -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* 노란 셀 컨벤션 (변경된 FCST 라인) */
+  .cell-highlighted {
+    @apply bg-yellow-200 font-medium;
+  }
+
+  /* Confidence score 색상 */
+  .confidence-high   { @apply text-green-600; }
+  .confidence-medium { @apply text-yellow-600; }
+  .confidence-low    { @apply text-red-500; }
+
+  /* R&O 타입 색상 */
+  .ro-risk        { @apply text-red-600 bg-red-50; }
+  .ro-opportunity { @apply text-green-600 bg-green-50; }
+  .ro-nonrepeated { @apply text-blue-600 bg-blue-50; }
+  .ro-dropship    { @apply text-purple-600 bg-purple-50; }
+
+  /* 워크플로우 상태 뱃지 */
+  .status-draft     { @apply bg-slate-100 text-slate-600; }
+  .status-submitted { @apply bg-blue-100 text-blue-700; }
+  .status-approved  { @apply bg-green-100 text-green-700; }
+  .status-locked    { @apply bg-gray-200 text-gray-600; }
+
+  /* Tier 뱃지 */
+  .tier-a { @apply bg-amber-100 text-amber-800 font-bold; }
+  .tier-b { @apply bg-sky-100 text-sky-800; }
+  .tier-c { @apply bg-slate-100 text-slate-600; }
+}
