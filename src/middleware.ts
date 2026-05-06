@@ -1,20 +1,8 @@
-import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
+import NextAuth from 'next-auth';
+import { authConfig } from '@/lib/auth.config';
 
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
-  const isLoginPage = req.nextUrl.pathname === '/login';
-
-  if (!isLoggedIn && !isLoginPage) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-
-  if (isLoggedIn && isLoginPage) {
-    return NextResponse.redirect(new URL('/forecast', req.url));
-  }
-
-  return NextResponse.next();
-});
+// bcryptjs를 import하지 않는 경량 config 사용 → Edge Runtime 호환
+export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: [
