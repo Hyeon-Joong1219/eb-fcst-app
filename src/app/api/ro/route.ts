@@ -24,11 +24,7 @@ export async function GET(req: NextRequest) {
   const userId = session.user!.id!;
 
   // Build customer scope filter
-  const customerFilter = customerId
-    ? { customer_id: customerId }
-    : role === 'AM'
-      ? { customer: { owner_id: userId } }
-      : {};
+  const customerFilter = customerId ? { customer_id: customerId } : {};
 
   // Fetch R&O items with relations
   const items = await prisma.rOItem.findMany({
@@ -47,7 +43,6 @@ export async function GET(req: NextRequest) {
     where: {
       year,
       ...(customerId ? { customer_id: customerId } : {}),
-      ...(role === 'AM' ? { owner_id: userId } : {}),
     },
     _count: { id: true },
   });
@@ -64,8 +59,7 @@ export async function GET(req: NextRequest) {
         year,
         snapshot_month: latestMonth as never,
         ...(customerId ? { customer_id: customerId } : {}),
-        ...(role === 'AM' ? { owner_id: userId } : {}),
-      },
+        },
       _sum: { amount_krw: true },
     });
     fcstKrw = Number(fcstAgg._sum.amount_krw ?? 0);
@@ -111,12 +105,8 @@ export async function POST(req: NextRequest) {
   const role = (session.user as { role?: string }).role;
   const userId = session.user!.id!;
 
-  // AM RBAC: only allowed to create for their own customers
-  if (role === 'AM') {
-    const customer = await prisma.customer.findUnique({ where: { id: customer_id } });
-    if (!customer || customer.owner_id !== userId) {
-      return NextResponse.json({ error: '본인 담당 고객만 입력 가능합니다' }, { status: 403 });
-    }
+  if (role === 'VIEWER') {
+    return NextResponse.json({ error: '편집 권한이 없습니다' }, { status: 403 });
   }
 
   const weight = WEIGHT[level];

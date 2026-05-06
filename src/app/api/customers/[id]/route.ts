@@ -16,14 +16,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  const role = (session.user as { role?: string }).role;
+  if (role !== 'ADMIN') return NextResponse.json({ error: '관리자만 고객 수정이 가능합니다' }, { status: 403 });
+
   const { id } = await params;
   const existing = await prisma.customer.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-
-  const role = (session.user as { role?: string }).role;
-  if (role === 'AM' && existing.owner_id !== session.user!.id!) {
-    return NextResponse.json({ error: '본인 담당 고객만 수정 가능합니다' }, { status: 403 });
-  }
 
   const body = await req.json();
   const parsed = updateSchema.safeParse(body);
@@ -43,7 +41,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const role = (session.user as { role?: string }).role;
-  if (role === 'AM') return NextResponse.json({ error: 'AM은 고객 삭제 불가' }, { status: 403 });
+  if (role !== 'ADMIN') return NextResponse.json({ error: '관리자만 고객 삭제가 가능합니다' }, { status: 403 });
 
   const { id } = await params;
   await prisma.customer.delete({ where: { id } });

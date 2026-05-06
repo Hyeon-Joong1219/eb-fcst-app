@@ -1,6 +1,6 @@
 // 공통 타입 정의
 
-export type UserRole = 'AM' | 'MANAGER' | 'ADMIN';
+export type UserRole = 'ADMIN' | 'EDITOR' | 'VIEWER';
 export type CustomerTier = 'A' | 'B' | 'C';
 export type LifecycleStage = 'DISCOVERY' | 'PRECLIN' | 'PHASE1' | 'PHASE2' | 'PHASE3' | 'COMMERCIAL';
 export type ForecastStatus = 'DRAFT' | 'SUBMITTED' | 'APPROVED' | 'LOCKED';

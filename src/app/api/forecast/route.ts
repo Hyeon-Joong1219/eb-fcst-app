@@ -22,7 +22,6 @@ export async function GET(req: NextRequest) {
       year,
       ...(snapshotMonth ? { snapshot_month: snapshotMonth as never } : {}),
       ...(customerId ? { customer_id: customerId } : {}),
-      ...(role === 'AM' ? { owner_id: userId } : {}),
     },
     include: {
       customer: { select: { id: true, name: true, tier: true, lifecycle_stage: true } },
@@ -73,12 +72,6 @@ export async function POST(req: NextRequest) {
   });
   if (existing?.status === 'LOCKED') {
     return NextResponse.json({ error: '잠금된 FCST는 수정 불가. R&O로 반영하세요.' }, { status: 403 });
-  }
-
-  // AM RBAC
-  const customer = await prisma.customer.findUnique({ where: { id: customer_id } });
-  if (role === 'AM' && customer?.owner_id !== userId) {
-    return NextResponse.json({ error: '본인 담당 고객만 입력 가능합니다' }, { status: 403 });
   }
 
   // OP FX rate 조회 → EUR 환산

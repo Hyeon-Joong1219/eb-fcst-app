@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   // 존재하는 모든 year × snapshot_month 조합 조회
   const snapshots = await prisma.forecastLine.groupBy({
     by: ['year', 'snapshot_month'],
-    where: role === 'AM' ? { owner_id: userId } : {},
+    where: {},
     _count: { id: true },
     _sum: { amount_krw: true },
     orderBy: [{ year: 'desc' }, { snapshot_month: 'asc' }],
@@ -26,7 +26,6 @@ export async function GET(req: NextRequest) {
           year: s.year,
           snapshot_month: s.snapshot_month,
           status: 'LOCKED' as never,
-          ...(role === 'AM' ? { owner_id: userId } : {}),
         },
       })
     )
@@ -45,7 +44,6 @@ export async function GET(req: NextRequest) {
         where: {
           year: s.year,
           snapshot_month: s.snapshot_month,
-          ...(role === 'AM' ? { owner_id: userId } : {}),
         },
         orderBy: { updated_at: 'desc' },
         select: { updated_at: true },

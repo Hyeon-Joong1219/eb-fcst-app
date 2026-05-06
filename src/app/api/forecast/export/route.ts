@@ -103,7 +103,6 @@ export async function GET(req: NextRequest) {
       where: {
         year,
         snapshot_month: snapshotMonth as never,
-        ...(role === 'AM' ? { owner_id: userId } : {}),
         ...(customerId   ? { customer_id: customerId } : {}),
       },
     }),
@@ -113,7 +112,6 @@ export async function GET(req: NextRequest) {
     }),
     prisma.customer.findMany({
       where: {
-        ...(role === 'AM' ? { owner_id: userId } : {}),
         ...(customerId   ? { id: customerId } : {}),
       },
       include: { owner: { select: { name: true } } },

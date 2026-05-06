@@ -136,10 +136,10 @@ async function main() {
 
   // 2. 기준 데이터 로드 (Admin 유저, 제품 목록)
   const adminUser = await prisma.user.findFirst({
-    where: { role: { in: ['ADMIN', 'MANAGER'] } },
+    where: { role: { in: ['ADMIN', 'EDITOR'] } },
     orderBy: { created_at: 'asc' },
   });
-  if (!adminUser) throw new Error('ADMIN 또는 MANAGER 유저가 없습니다. 먼저 seed를 실행하세요.');
+  if (!adminUser) throw new Error('ADMIN 또는 EDITOR 유저가 없습니다. 먼저 seed를 실행하세요.');
   console.log(`▶ 기본 담당자: ${adminUser.name} (${adminUser.role})`);
 
   const products = await prisma.product.findMany({ where: { is_active: true } });

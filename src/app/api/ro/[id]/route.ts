@@ -33,9 +33,8 @@ export async function PATCH(
   const existing = await prisma.rOItem.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-  // Only owner, ADMIN, or MANAGER can edit
-  if (role === 'AM' && existing.created_by !== userId) {
-    return NextResponse.json({ error: '본인이 작성한 항목만 수정 가능합니다' }, { status: 403 });
+  if (role === 'VIEWER') {
+    return NextResponse.json({ error: '편집 권한이 없습니다' }, { status: 403 });
   }
 
   const body = await req.json();
@@ -91,13 +90,7 @@ export async function DELETE(
   const existing = await prisma.rOItem.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-  // Only owner, ADMIN, or MANAGER can delete
-  const canDelete =
-    existing.created_by === userId ||
-    role === 'ADMIN' ||
-    role === 'MANAGER';
-
-  if (!canDelete) {
+  if (role === 'VIEWER') {
     return NextResponse.json({ error: '삭제 권한이 없습니다' }, { status: 403 });
   }
 
